@@ -18,6 +18,34 @@ monitors = {
 monitor_id = None
 
 class Microbit:
+
+  def __init__(self, device):
+    if device not in monitors:
+      print "Unknown usb device '{}'".format(device)
+      print "Please add it to the monitors dictionary"
+      exit(1)
+    self.monitor_id = monitors[device]
+    self.device = device
+    self.ser = serial.Serial(
+      port=os.path.join('/dev', device),
+      baudrate=115200
+      # ,
+      # parity=serial.PARITY_ODD,
+      # stopbits=serial.STOPBITS_TWO,
+      # bytesize=serial.SEVENBITS
+    )
+    self.ser.isOpen()
+  def monitor(self):
+    try:
+      while True:
+        time.sleep(0.1)
+        out = ''
+        while self.ser.inWaiting() > 0:
+          out += self.ser.read(1)
+
+        self.action(out)
+    except IOError:
+      return
   def lookupMethod(self, command):
     return getattr(self, 'do_' + command.upper(), None)
   def action(self, line):
@@ -35,16 +63,16 @@ class Microbit:
     print "UNKNOWN COMMAND: " + command
   def do_MICROBIT_ACCELEROMETER_EVT_TILT_RIGHT(self, rest):
     print "Right"
-    call(['fb-rotate', '-d', monitor_id, '-r', '90'])
+    call(['fb-rotate', '-d', self.monitor_id, '-r', '90'])
   def do_MICROBIT_ACCELEROMETER_EVT_TILT_UP(self, rest):
     print "Up"
-    call(['fb-rotate', '-d', monitor_id, '-r', '0'])
+    call(['fb-rotate', '-d', self.monitor_id, '-r', '0'])
   def do_MICROBIT_ACCELEROMETER_EVT_TILT_LEFT(self, rest):
     print "Left"
-    call(['fb-rotate', '-d', monitor_id, '-r', '270'])
+    call(['fb-rotate', '-d', self.monitor_id, '-r', '270'])
   def do_MICROBIT_ACCELEROMETER_EVT_TILT_DOWN(self, rest):
     print "Down"
-    call(['fb-rotate', '-d', monitor_id, '-r', '180'])
+    call(['fb-rotate', '-d', self.monitor_id, '-r', '180'])
 
 
 serial_ports = [file for file in os.listdir('/dev')
@@ -59,27 +87,5 @@ elif len(serial_ports) > 1:
     print sp
   exit(1)
 device = serial_ports[0]
-if device not in monitors:
-  print "Unknown usb device '{}'".format(device)
-  print "Please add it to the monitors dictionary"
-  exit(1)
-monitor_id = monitors[device]
 
-ser = serial.Serial(
-  port=os.path.join('/dev', device),
-  baudrate=115200
-  # ,
-  # parity=serial.PARITY_ODD,
-  # stopbits=serial.STOPBITS_TWO,
-  # bytesize=serial.SEVENBITS
-)
-ser.isOpen()
-
-
-while True:
-  time.sleep(0.1)
-  out = ''
-  while ser.inWaiting() > 0:
-    out += ser.read(1)
-
-  Microbit().action(out)
+Microbit(device).monitor()
