@@ -35,6 +35,7 @@ class Microbit:
       # bytesize=serial.SEVENBITS
     )
     self.ser.isOpen()
+    print "Monitoring /dev/"+device
   def monitor(self):
     try:
       while True:
@@ -75,17 +76,17 @@ class Microbit:
     call(['fb-rotate', '-d', self.monitor_id, '-r', '180'])
 
 
-serial_ports = [file for file in os.listdir('/dev')
-                if fnmatch(file, "cu.usbmodem*")]
-
-if not serial_ports:
-  print "I couldn't find any microbits plugged in via usb"
-  exit(1)
-elif len(serial_ports) > 1:
-  print "I found multiple microbits plugged in, so can't tell which one to use"
-  for sp in serial_ports:
-    print sp
-  exit(1)
-device = serial_ports[0]
-
-Microbit(device).monitor()
+while(True):
+  serial_ports = [file for file in os.listdir('/dev')
+                  if fnmatch(file, "cu.usbmodem*")]
+  
+  if not serial_ports:
+    print "I couldn't find any microbits plugged in via usb"
+  elif len(serial_ports) > 1:
+    print "I found multiple microbits plugged in, so can't tell which one to use"
+    for sp in serial_ports:
+      print sp
+  else:
+    device = serial_ports[0]
+    Microbit(device).monitor()
+  time.sleep(1)

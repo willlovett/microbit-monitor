@@ -30,7 +30,7 @@ receives this event and orients the display on that monitor appropriately
 
 # TODO list
 * Add a debug mode to reduce verbosity
-* Handle microbit disconnection and reconnection
+* Handle microbit disconnection and reconnection using pyudev instead of just sleeping
 * Instructions for daemonising read_serial
 * Add infrastructure to push messages to the microbit
 * Start doing something useful with the microbit display
