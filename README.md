@@ -11,7 +11,7 @@ receives this event and orients the display on that monitor appropriately
 2. Clone and build fb-rotate, ensuring it's in your path: https://github.com/CdLbB/fb-rotate
 3. Plug your microbit into a usb device on your monitor (and ensure it's eventually hooked up to your mac)
 4. Build and install:
-   
+
    ```
    yt build
    cp build/bbc-microbit-classic-gcc/source/microbit-monitor-combined.hex /Volumes/MICROBIT/
@@ -26,3 +26,11 @@ receives this event and orients the display on that monitor appropriately
    ```
 6. Rotate your monitor
 7. Gasp in amazement as your display configuration rotates automagically
+
+
+# TODO list
+* Add a debug mode to reduce verbosity
+* Handle microbit disconnection and reconnection
+* Instructions for daemonising read_serial
+* Add infrastructure to push messages to the microbit
+* Start doing something useful with the microbit display
