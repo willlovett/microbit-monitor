@@ -6,5 +6,7 @@
   "description": "Cool stuff for a microbit attached to the side of a computer monitor",
   "author": "Will Lovett",
   "license": "Apache-2.0",
-  "dependencies": {}
+  "dependencies": {
+    "microbit": "lancaster-university/microbit"
+  }
 }
