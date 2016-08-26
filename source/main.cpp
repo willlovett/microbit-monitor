@@ -33,10 +33,12 @@ MicroBitUARTService *uart;
 MicroBitSerial *serial;
 
 void onGesture(MicroBitEvent e) {
-  ManagedString Event = lookupGesture(e.value);
-  ManagedString ShortEvent = lookupGesture(e.value, true);
-  uBit.display.printAsync(ShortEvent);
-  serial->send(Event);
+  ManagedString Event = lookupGesture(uBit, e.value);
+  ManagedString ShortEvent = lookupGesture(uBit, e.value, true);
+  if (e.value != MICROBIT_ACCELEROMETER_EVT_NONE) {
+    uBit.display.printAsync(ShortEvent);
+    serial->send(Event);
+  }
 }
 
 int main()
